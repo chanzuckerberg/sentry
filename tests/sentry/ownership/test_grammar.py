@@ -13,14 +13,19 @@ fixture_data = """
 
   url:http://google.com/* #backend
 path:src/sentry/*       david@sentry.io
+
+tags.foo:bar             tagperson@sentry.io
+tags.foo:"bar baz"       tagperson@sentry.io
 """
 
 
 def test_parse_rules():
     assert parse_rules(fixture_data) == [
-        Rule(Matcher('path', '*.js'), [Owner('team', 'frontend'), Owner('user', 'm@robenolt.com')]),
-        Rule(Matcher('url', 'http://google.com/*'), [Owner('team', 'backend')]),
-        Rule(Matcher('path', 'src/sentry/*'), [Owner('user', 'david@sentry.io')]),
+        Rule(Matcher("path", "*.js"), [Owner("team", "frontend"), Owner("user", "m@robenolt.com")]),
+        Rule(Matcher("url", "http://google.com/*"), [Owner("team", "backend")]),
+        Rule(Matcher("path", "src/sentry/*"), [Owner("user", "david@sentry.io")]),
+        Rule(Matcher("tags.foo", "bar"), [Owner("user", "tagperson@sentry.io")]),
+        Rule(Matcher("tags.foo", "bar baz"), [Owner("user", "tagperson@sentry.io")]),
     ]
 
 
@@ -110,10 +115,20 @@ def test_matcher_test_stacktrace():
         }
     }
 
-    assert Matcher('path', '*.py').test(data)
-    assert Matcher('path', 'foo/*.py').test(data)
-    assert Matcher('path', '/usr/local/src/*/app.py').test(data)
-    assert not Matcher('path', '*.js').test(data)
-    assert not Matcher('path', '*.jsx').test(data)
-    assert not Matcher('url', '*.py').test(data)
-    assert not Matcher('path', '*.py').test({})
+    assert Matcher("path", "*.py").test(data)
+    assert Matcher("path", "foo/*.py").test(data)
+    assert Matcher("path", "/usr/local/src/*/app.py").test(data)
+    assert not Matcher("path", "*.js").test(data)
+    assert not Matcher("path", "*.jsx").test(data)
+    assert not Matcher("url", "*.py").test(data)
+    assert not Matcher("path", "*.py").test({})
+
+
+def test_matcher_test_tags():
+    data = {
+        "tags": [["foo", "foo_value"], ["bar", "barval"]],
+    }
+
+    assert Matcher("tags.foo", "foo_value").test(data)
+    assert Matcher("tags.bar", "barval").test(data)
+    assert not Matcher("tags.barz", "barval").test(data)
