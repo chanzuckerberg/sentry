@@ -108,6 +108,10 @@ exports[`Project Ownership Input renders 1`] = `
                 "value": "path",
               },
               Object {
+                "label": "Tag",
+                "value": "tag",
+              },
+              Object {
                 "label": "URL",
                 "value": "url",
               },
@@ -122,7 +126,7 @@ exports[`Project Ownership Input renders 1`] = `
           value="path"
         >
           <SelectField
-            className="css-1bclqmz-BuilderSelect e1hyuoc76"
+            className="css-1vsx268-BuilderSelect e1hyuoc76"
             clearable={false}
             disabled={false}
             hideErrorMessage={false}
@@ -134,6 +138,10 @@ exports[`Project Ownership Input renders 1`] = `
                 Object {
                   "label": "Path",
                   "value": "path",
+                },
+                Object {
+                  "label": "Tag",
+                  "value": "tag",
                 },
                 Object {
                   "label": "URL",
@@ -151,7 +159,7 @@ exports[`Project Ownership Input renders 1`] = `
             value="path"
           >
             <div
-              className="css-1bclqmz-BuilderSelect e1hyuoc76"
+              className="css-1vsx268-BuilderSelect e1hyuoc76"
               style={
                 Object {
                   "width": 140,
@@ -173,6 +181,10 @@ exports[`Project Ownership Input renders 1`] = `
                       Object {
                         "label": "Path",
                         "value": "path",
+                      },
+                      Object {
+                        "label": "Tag",
+                        "value": "tag",
                       },
                       Object {
                         "label": "URL",
@@ -197,6 +209,10 @@ exports[`Project Ownership Input renders 1`] = `
                         Object {
                           "label": "Path",
                           "value": "path",
+                        },
+                        Object {
+                          "label": "Tag",
+                          "value": "tag",
                         },
                         Object {
                           "label": "URL",
@@ -226,6 +242,10 @@ exports[`Project Ownership Input renders 1`] = `
                             "value": "path",
                           },
                           Object {
+                            "label": "Tag",
+                            "value": "tag",
+                          },
+                          Object {
                             "label": "URL",
                             "value": "url",
                           },
@@ -251,6 +271,10 @@ exports[`Project Ownership Input renders 1`] = `
                             Object {
                               "label": "Path",
                               "value": "path",
+                            },
+                            Object {
+                              "label": "Tag",
+                              "value": "tag",
                             },
                             Object {
                               "label": "URL",
@@ -279,6 +303,10 @@ exports[`Project Ownership Input renders 1`] = `
                               Object {
                                 "label": "Path",
                                 "value": "path",
+                              },
+                              Object {
+                                "label": "Tag",
+                                "value": "tag",
                               },
                               Object {
                                 "label": "URL",
@@ -334,6 +362,10 @@ exports[`Project Ownership Input renders 1`] = `
                                   "value": "path",
                                 },
                                 Object {
+                                  "label": "Tag",
+                                  "value": "tag",
+                                },
+                                Object {
                                   "label": "URL",
                                   "value": "url",
                                 },
@@ -354,7 +386,7 @@ exports[`Project Ownership Input renders 1`] = `
                             valueKey="value"
                           >
                             <div
-                              className="Select e1qrhqd00 css-pr263a-StyledSelect-StyledSelectControl eho28m20 has-value is-searchable Select--single"
+                              className="Select e1qrhqd00 css-pr263a-StyledSelect-StyledSelectControl e1ynsgsr0 has-value is-searchable Select--single"
                             >
                               <input
                                 disabled={false}
@@ -487,7 +519,7 @@ exports[`Project Ownership Input renders 1`] = `
           value=""
         >
           <input
-            className="css-1enrgn8-Input-inputStyles-BuilderInput e1hyuoc77"
+            className="css-v3z08s-Input-inputStyles-BuilderInput e1hyuoc77"
             onChange={[Function]}
             placeholder="src/example/*"
             value=""
@@ -497,11 +529,11 @@ exports[`Project Ownership Input renders 1`] = `
           src="icon-chevron-right"
         >
           <InlineSvg
-            className="css-a4tn6s-Divider e1hyuoc78"
+            className="css-1qihtir-Divider e1hyuoc79"
             src="icon-chevron-right"
           >
             <StyledSvg
-              className="css-a4tn6s-Divider e1hyuoc78"
+              className="css-1qihtir-Divider e1hyuoc79"
               height="1em"
               viewBox={Object {}}
               width="1em"
@@ -867,7 +899,7 @@ exports[`Project Ownership Input renders 1`] = `
           size="small"
         >
           <Button
-            className="css-po7kq7-AddButton e1hyuoc79"
+            className="css-f6y09s-AddButton e1hyuoc711"
             disabled={true}
             icon="icon-circle-add"
             onClick={[Function]}
@@ -876,7 +908,7 @@ exports[`Project Ownership Input renders 1`] = `
           >
             <StyledButton
               aria-disabled={true}
-              className="css-po7kq7-AddButton e1hyuoc79"
+              className="css-f6y09s-AddButton e1hyuoc711"
               disabled={true}
               href={null}
               onClick={[Function]}
@@ -887,7 +919,7 @@ exports[`Project Ownership Input renders 1`] = `
             >
               <Component
                 aria-disabled={true}
-                className="e1hyuoc79 css-ogw40-StyledButton-getColors-AddButton eqrebog0"
+                className="e1hyuoc711 css-f6y09s-StyledButton-getColors-AddButton eqrebog0"
                 href={null}
                 onClick={[Function]}
                 role="button"
@@ -896,7 +928,7 @@ exports[`Project Ownership Input renders 1`] = `
               >
                 <button
                   aria-disabled={true}
-                  className="e1hyuoc79 css-ogw40-StyledButton-getColors-AddButton eqrebog0"
+                  className="e1hyuoc711 css-1vf07fg-StyledButton-getColors-AddButton edwq9my0"
                   href={null}
                   onClick={[Function]}
                   role="button"
