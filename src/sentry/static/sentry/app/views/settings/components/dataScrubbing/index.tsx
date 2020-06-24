@@ -9,27 +9,18 @@ import {addErrorMessage, addSuccessMessage} from 'app/actionCreators/indicator';
 import ExternalLink from 'app/components/links/externalLink';
 import Button from 'app/components/button';
 import {Organization, Project} from 'app/types';
+import {openModal} from 'app/actionCreators/modal';
 
-import {valueSuggestions} from './utils';
-import Dialog from './dialog';
-import Content from './content';
+import Edit from './modals/edit';
+import Add from './modals/add';
 import OrganizationRules from './organizationRules';
-import {
-  Rule,
-  EventIdStatus,
-  SourceSuggestion,
-  Errors,
-  EventId,
-  RequestError,
-} from './types';
+import {Rule, ProjectId} from './types';
 import convertRelayPiiConfig from './convertRelayPiiConfig';
 import submitRules from './submitRules';
-import handleError from './handleError';
+import Content from './content';
 
 const ADVANCED_DATASCRUBBING_LINK =
   'https://docs.sentry.io/data-management/advanced-datascrubbing/';
-
-type ProjectId = Project['id'] | undefined;
 
 type Props<T extends ProjectId> = {
   endpoint: string;
@@ -44,12 +35,7 @@ type Props<T extends ProjectId> = {
 type State = {
   rules: Array<Rule>;
   savedRules: Array<Rule>;
-  sourceSuggestions: Array<SourceSuggestion>;
-  eventId: EventId;
   orgRules: Array<Rule>;
-  errors: Errors;
-  showAddRuleModal?: boolean;
-  isProjectLevel?: boolean;
   relayPiiConfig?: string;
 };
 
@@ -61,18 +47,11 @@ class DataScrubbing<T extends ProjectId = undefined> extends React.Component<
     rules: [],
     savedRules: [],
     relayPiiConfig: this.props.relayPiiConfig,
-    sourceSuggestions: [],
-    eventId: {
-      value: '',
-    },
     orgRules: [],
-    errors: {},
-    isProjectLevel: this.props.endpoint.includes('projects'),
   };
 
   componentDidMount() {
     this.loadRules();
-    this.loadSourceSuggestions();
     this.loadOrganizationRules();
   }
 
@@ -89,10 +68,9 @@ class DataScrubbing<T extends ProjectId = undefined> extends React.Component<
   api = new Client();
 
   loadOrganizationRules = () => {
-    const {isProjectLevel} = this.state;
-    const {organization} = this.props;
+    const {organization, projectId} = this.props;
 
-    if (isProjectLevel) {
+    if (projectId) {
       try {
         this.setState({
           orgRules: convertRelayPiiConfig(organization.relayPiiConfig),
@@ -115,161 +93,72 @@ class DataScrubbing<T extends ProjectId = undefined> extends React.Component<
     }
   }
 
-  loadSourceSuggestions = async () => {
-    const {organization, projectId} = this.props;
-    const {eventId} = this.state;
-
-    if (!eventId.value) {
-      this.setState(prevState => ({
-        sourceSuggestions: valueSuggestions,
-        eventId: {
-          ...prevState.eventId,
-          status: undefined,
-        },
-      }));
-      return;
-    }
-
-    this.setState(prevState => ({
-      sourceSuggestions: valueSuggestions,
-      eventId: {
-        ...prevState.eventId,
-        status: EventIdStatus.LOADING,
-      },
-    }));
-
-    try {
-      const query: {projectId?: string; eventId: string} = {eventId: eventId.value};
-      if (projectId) {
-        query.projectId = projectId;
-      }
-      const rawSuggestions = await this.api.requestPromise(
-        `/organizations/${organization.slug}/data-scrubbing-selector-suggestions/`,
-        {query}
-      );
-      const sourceSuggestions: Array<SourceSuggestion> = rawSuggestions.suggestions;
-
-      if (sourceSuggestions && sourceSuggestions.length > 0) {
-        this.setState(prevState => ({
-          sourceSuggestions,
-          eventId: {
-            ...prevState.eventId,
-            status: EventIdStatus.LOADED,
-          },
-        }));
-        return;
-      }
-
-      this.setState(prevState => ({
-        sourceSuggestions: valueSuggestions,
-        eventId: {
-          ...prevState.eventId,
-          status: EventIdStatus.NOT_FOUND,
-        },
-      }));
-    } catch {
-      this.setState(prevState => ({
-        eventId: {
-          ...prevState.eventId,
-          status: EventIdStatus.ERROR,
-        },
-      }));
+  successfullySaved = (
+    response: T extends undefined ? Organization : Project,
+    successMessage: string
+  ) => {
+    const {onSubmitSuccess} = this.props;
+    this.setState({rules: convertRelayPiiConfig(response.relayPiiConfig)});
+    addSuccessMessage(successMessage);
+    if (onSubmitSuccess) {
+      onSubmitSuccess(response);
     }
   };
 
-  convertRequestError = (error: ReturnType<typeof handleError>) => {
-    switch (error.type) {
-      case RequestError.InvalidSelector:
-        this.setState(prevState => ({
-          errors: {
-            ...prevState.errors,
-            source: error.message,
-          },
-        }));
-        break;
-      case RequestError.RegexParse:
-        this.setState(prevState => ({
-          errors: {
-            ...prevState.errors,
-            pattern: error.message,
-          },
-        }));
-        break;
-      default:
-        addErrorMessage(error.message);
-    }
+  handleOpenAddModal = () => {
+    const {rules} = this.state;
+    openModal(modalProps => (
+      <Add
+        {...modalProps}
+        projectId={this.props.projectId}
+        savedRules={rules}
+        api={this.api}
+        endpoint={this.props.endpoint}
+        orgSlug={this.props.organization.slug}
+        onSubmitSuccess={response => {
+          this.successfullySaved(response, 'Successfully added data scrubbing rule');
+        }}
+      />
+    ));
   };
 
-  handleSave = async (rules: Array<Rule>, successMessage: string) => {
-    const {endpoint, onSubmitSuccess} = this.props;
+  handleOpenAEditModal = (id: Rule['id']) => () => {
+    const {rules} = this.state;
+    openModal(modalProps => (
+      <Edit
+        {...modalProps}
+        rule={rules[id]}
+        projectId={this.props.projectId}
+        savedRules={rules}
+        api={this.api}
+        endpoint={this.props.endpoint}
+        orgSlug={this.props.organization.slug}
+        onSubmitSuccess={response => {
+          this.successfullySaved(response, 'Successfully updated data scrubbing rule');
+        }}
+      />
+    ));
+  };
+
+  handleDelete = (id: Rule['id']) => async () => {
+    const {rules} = this.state;
+    const filteredRules = rules.filter(rule => rule.id !== id);
+
     try {
-      const data = await submitRules(this.api, endpoint, rules);
+      const data = await submitRules(this.api, this.props.endpoint, filteredRules);
       if (data?.relayPiiConfig) {
         const convertedRules = convertRelayPiiConfig(data.relayPiiConfig);
-        this.setState({rules: convertedRules, showAddRuleModal: undefined});
-        addSuccessMessage(successMessage);
-        if (onSubmitSuccess) {
-          onSubmitSuccess(data);
-        }
+        this.setState({rules: convertedRules});
+        addSuccessMessage('Successfully deleted data scrubbing rule');
       }
-    } catch (error) {
-      this.convertRequestError(handleError(error));
+    } catch {
+      addErrorMessage('An unknown error occurred while deleting data scrubbing rule');
     }
-  };
-
-  handleAddRule = (rule: Rule) => {
-    const newRule = {...rule, id: this.state.rules.length};
-    const rules = [...this.state.rules, newRule];
-    this.handleSave(rules, t('Successfully added rule'));
-  };
-
-  handleUpdateRule = (updatedRule: Rule) => {
-    const rules = this.state.rules.map(rule => {
-      if (rule.id === updatedRule.id) {
-        return updatedRule;
-      }
-      return rule;
-    });
-    this.handleSave(rules, t('Successfully updated rule'));
-  };
-
-  handleDeleteRule = (rulesToBeDeleted: Array<Rule['id']>) => {
-    const rules = this.state.rules.filter(rule => !rulesToBeDeleted.includes(rule.id));
-    this.handleSave(rules, t('Successfully deleted rule'));
-  };
-
-  handleToggleAddRuleModal = (showAddRuleModal: boolean) => () => {
-    this.setState(prevState => ({
-      showAddRuleModal,
-      eventId:
-        prevState.eventId?.status !== EventIdStatus.LOADED
-          ? {value: ''}
-          : prevState.eventId,
-    }));
-  };
-
-  handleUpdateEventId = (eventId: string) => {
-    this.setState(
-      {
-        eventId: {
-          value: eventId,
-        },
-      },
-      this.loadSourceSuggestions
-    );
   };
 
   render() {
-    const {additionalContext, disabled} = this.props;
-    const {
-      rules,
-      sourceSuggestions,
-      showAddRuleModal,
-      eventId,
-      orgRules,
-      isProjectLevel,
-      errors,
-    } = this.state;
+    const {additionalContext, disabled, projectId} = this.props;
+    const {orgRules, rules} = this.state;
 
     return (
       <React.Fragment>
@@ -289,15 +178,11 @@ class DataScrubbing<T extends ProjectId = undefined> extends React.Component<
             })}
           </PanelAlert>
           <PanelBody>
-            {isProjectLevel && <OrganizationRules rules={orgRules} />}
+            {projectId && <OrganizationRules rules={orgRules} />}
             <Content
-              errors={errors}
               rules={rules}
-              onDeleteRule={this.handleDeleteRule}
-              onUpdateRule={this.handleUpdateRule}
-              onUpdateEventId={this.handleUpdateEventId}
-              eventId={eventId}
-              sourceSuggestions={sourceSuggestions}
+              onDeleteRule={this.handleDelete}
+              onEditRule={this.handleOpenAEditModal}
               disabled={disabled}
             />
             <PanelAction>
@@ -306,7 +191,7 @@ class DataScrubbing<T extends ProjectId = undefined> extends React.Component<
               </Button>
               <Button
                 disabled={disabled}
-                onClick={this.handleToggleAddRuleModal(true)}
+                onClick={this.handleOpenAddModal}
                 priority="primary"
               >
                 {t('Add Rule')}
@@ -314,16 +199,6 @@ class DataScrubbing<T extends ProjectId = undefined> extends React.Component<
             </PanelAction>
           </PanelBody>
         </Panel>
-        {showAddRuleModal && (
-          <Dialog
-            errors={errors}
-            sourceSuggestions={sourceSuggestions}
-            onSaveRule={this.handleAddRule}
-            onClose={this.handleToggleAddRuleModal(false)}
-            onUpdateEventId={this.handleUpdateEventId}
-            eventId={eventId}
-          />
-        )}
       </React.Fragment>
     );
   }

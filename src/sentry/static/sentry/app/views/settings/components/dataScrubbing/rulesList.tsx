@@ -12,7 +12,7 @@ import {RuleType, MethodType, Rule} from './types';
 
 type Props = {
   rules: Array<Rule>;
-  onShowEditRuleModal?: (id: Rule['id']) => () => void;
+  onEditRule?: (id: Rule['id']) => () => void;
   onDeleteRule?: (id: Rule['id']) => () => void;
   disabled?: boolean;
 };
@@ -38,7 +38,7 @@ const getListItemDescription = (rule: Rule) => {
 };
 
 const RulesList = React.forwardRef(function RulesList(
-  {rules, onShowEditRuleModal, onDeleteRule, disabled}: Props,
+  {rules, onEditRule, onDeleteRule, disabled}: Props,
   ref: React.Ref<HTMLUListElement>
 ) {
   return (
@@ -48,11 +48,11 @@ const RulesList = React.forwardRef(function RulesList(
         return (
           <ListItem key={id}>
             <TextOverflow>{getListItemDescription(rule)}</TextOverflow>
-            {onShowEditRuleModal && (
+            {onEditRule && (
               <Button
                 label={t('Edit Rule')}
                 size="small"
-                onClick={onShowEditRuleModal(id)}
+                onClick={onEditRule(id)}
                 icon={<IconEdit />}
                 disabled={disabled}
               />

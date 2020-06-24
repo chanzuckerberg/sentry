@@ -7,15 +7,15 @@ import Input from 'app/views/settings/components/forms/controls/input';
 import TextOverflow from 'app/components/textOverflow';
 import {defined} from 'app/utils';
 
-import {unarySuggestions, binarySuggestions} from '../utils';
+import {unarySuggestions, binarySuggestions} from '../../utils';
 import SourceSuggestionExamples from './sourceSuggestionExamples';
-import {SourceSuggestion, SourceSuggestionType} from '../types';
+import {SourceSuggestion, SourceSuggestionType} from '../../types';
 
 type Props = {
   value: string;
   onChange: (value: string) => void;
   isRegExMatchesSelected: boolean;
-  suggestions?: Array<SourceSuggestion>;
+  suggestions: Array<SourceSuggestion>;
   error?: string;
   onBlur?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
 };

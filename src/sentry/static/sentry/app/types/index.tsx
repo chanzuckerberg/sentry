@@ -96,7 +96,6 @@ export type OrganizationSummary = {
  * Lightweight in this case means it does not contain `projects` or `teams`
  */
 export type LightWeightOrganization = OrganizationSummary & {
-  relayPiiConfig: string;
   scrubIPAddresses: boolean;
   attachmentsRole: string;
   eventsMemberAdmin: boolean;
@@ -125,6 +124,7 @@ export type LightWeightOrganization = OrganizationSummary & {
   role?: string;
   onboardingTasks: OnboardingTaskStatus[];
   trustedRelays: string[];
+  relayPiiConfig: string;
 };
 
 /**
@@ -156,6 +156,7 @@ export type Project = {
   // XXX: These are part of the DetailedProject serializer
   plugins: Plugin[];
   processingIssues: number;
+  relayPiiConfig: string;
   builtinSymbolSources?: string[];
 } & AvatarProject;
 

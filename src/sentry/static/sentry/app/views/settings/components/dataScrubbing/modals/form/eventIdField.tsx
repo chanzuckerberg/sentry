@@ -8,24 +8,22 @@ import space from 'app/styles/space';
 import Field from 'app/views/settings/components/forms/field';
 
 import EventIdFieldStatusIcon from './eventIdFieldStatusIcon';
-import {EventIdStatus, EventId} from '../types';
+import {EventIdStatus, EventId} from '../../types';
+import {saveToSourceGroupData} from '../utils';
 
 type Props = {
   onUpdateEventId: (eventId: string) => void;
-  eventId?: EventId;
+  eventId: EventId;
   disabled?: boolean;
 };
 
 type State = {
   value: string;
-  status?: EventIdStatus;
+  status: EventIdStatus;
 };
 
 class EventIdField extends React.Component<Props, State> {
-  state = {
-    value: this.props.eventId?.value || '',
-    status: this.props.eventId?.status,
-  };
+  state: State = {...this.props.eventId};
 
   componentDidUpdate(prevProps: Props) {
     if (!isEqual(prevProps.eventId, this.props.eventId)) {
@@ -45,16 +43,20 @@ class EventIdField extends React.Component<Props, State> {
     if (eventId !== this.state.value) {
       this.setState({
         value: eventId,
-        status: undefined,
+        status: EventIdStatus.UNDEFINED,
       });
     }
   };
 
   isEventIdValid = (): boolean => {
-    const {value} = this.state;
+    const {value, status} = this.state;
 
     if (value && value.length !== 32) {
-      this.setState({status: EventIdStatus.INVALID});
+      if (status !== EventIdStatus.INVALID) {
+        saveToSourceGroupData({value, status});
+        this.setState({status: EventIdStatus.INVALID});
+      }
+
       return false;
     }
 
@@ -80,7 +82,7 @@ class EventIdField extends React.Component<Props, State> {
   handleClickIconClose = () => {
     this.setState({
       value: '',
-      status: undefined,
+      status: EventIdStatus.UNDEFINED,
     });
   };
 

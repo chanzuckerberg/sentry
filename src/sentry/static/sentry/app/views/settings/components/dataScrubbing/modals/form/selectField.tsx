@@ -35,8 +35,8 @@ class SelectField extends React.Component<Props> {
         styles={{
           control: (provided: {[x: string]: string | number | boolean}) => ({
             ...provided,
-            minHeight: '38px',
-            height: '38px',
+            minHeight: '41px',
+            height: '41px',
           }),
         }}
         ref={this.selectRef}
