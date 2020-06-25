@@ -14,6 +14,7 @@ from sentry.web.frontend.debug.debug_assigned_email import (
 from sentry.web.frontend.debug.debug_trigger_error import DebugTriggerErrorView
 from sentry.web.frontend.debug.debug_error_embed import DebugErrorPageEmbedView
 from sentry.web.frontend.debug.debug_incident_activity_email import DebugIncidentActivityEmailView
+from sentry.web.frontend.debug.debug_incident_trigger_email import DebugIncidentTriggerEmailView
 from sentry.web.frontend.debug.debug_invalid_identity_email import DebugInvalidIdentityEmailView
 from sentry.web.frontend.debug.debug_organization_invite_request import (
     DebugOrganizationInviteRequestEmailView,
@@ -113,6 +114,7 @@ urlpatterns = [
     url(r"^debug/mail/sso-unlinked/no-password$", DebugSsoUnlinkedNoPasswordEmailView.as_view()),
     url(r"^debug/mail/alert-rule-trigger$", DebugAlertRuleTriggerEmailView.as_view()),
     url(r"^debug/mail/incident-activity$", DebugIncidentActivityEmailView.as_view()),
+    url(r"^debug/mail/incident-trigger$", DebugIncidentTriggerEmailView.as_view()),
     url(r"^debug/mail/setup-2fa/$", DebugSetup2faEmailView.as_view()),
     url(r"^debug/embed/error-page/$", DebugErrorPageEmbedView.as_view()),
     url(r"^debug/trigger-error/$", DebugTriggerErrorView.as_view()),
