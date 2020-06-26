@@ -6,7 +6,7 @@ import Button from 'app/components/button';
 import space from 'app/styles/space';
 import {t} from 'app/locale';
 
-import emptyState from '../../../images/spot/performance-empty-state.svg';
+import emptyStateImg from '../../../images/spot/performance-empty-state.svg';
 
 function Onboarding() {
   return (
@@ -23,7 +23,7 @@ function Onboarding() {
           target="_blank"
           href="https://docs.sentry.io/performance-monitoring/setup/"
         >
-          {t('Take the tour')}
+          {t('View Features')}
         </Button>
         <Button
           priority="primary"
@@ -38,7 +38,7 @@ function Onboarding() {
 }
 
 const StyledOnboardingPanel = styled(OnboardingPanel)`
-  background: url(${emptyState}) no-repeat left center !important;
+  background: url(${emptyStateImg}) no-repeat 25% center/75%;
 `;
 
 const ButtonList = styled('div')`

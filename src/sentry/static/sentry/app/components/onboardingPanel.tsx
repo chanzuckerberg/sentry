@@ -5,7 +5,7 @@ import {Panel} from 'app/components/panels';
 import space from 'app/styles/space';
 
 type Props = React.PropsWithChildren<{
-  image: React.ReactNode;
+  image?: React.ReactNode;
   className?: string;
 }>;
 
@@ -30,7 +30,7 @@ const Container = styled('div')`
 `;
 
 const StyledBox = styled('div')`
-  flex: 1;
+  flex: 1.5;
   padding: ${space(3)};
 `;
 
@@ -38,6 +38,7 @@ const IllustrationContainer = styled(StyledBox)`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: 1;
 `;
 
 export default OnboardingPanel;
