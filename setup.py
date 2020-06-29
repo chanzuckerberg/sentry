@@ -48,8 +48,7 @@ from sentry.utils.distutils import (
 )
 
 # The version of sentry
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-version_file = open(os.path.join(ROOT_DIR, 'VERSION'))
+version_file = open(os.path.join(ROOT, 'VERSION'))
 VERSION = version_file.read().strip()
 
 # Hack to prevent stupid "TypeError: 'NoneType' object is not callable" error

@@ -180,7 +180,7 @@ lint-js:
 	@echo ""
 
 publish:
-	$(eval TAG := $(SENTRY_VERSION)-sha-$(shell git rev-parse --short HEAD))
+	$(eval TAG := $(SENTRY_VERSION).$(shell git rev-parse --short HEAD))
 	@echo $(TAG) > VERSION
 	git add VERSION
 	git commit -m "[feature] Updating VERSION file"
