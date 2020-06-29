@@ -1,4 +1,5 @@
 STATIC_DIR = src/sentry/static/sentry
+SENTRY_VERSION = 9.1.2
 
 ifneq "$(wildcard /usr/local/opt/libxmlsec1/lib)" ""
 	LDFLAGS += -L/usr/local/opt/libxmlsec1/lib
@@ -179,8 +180,13 @@ lint-js:
 	@echo ""
 
 publish:
+	$(eval TAG := $(SENTRY_VERSION)-sha-$(shell git rev-parse --short HEAD))
 	python setup.py sdist bdist_wheel
-	#TODO: tag and create release for github
+	git tag $(TAG)
+	@echo "Navigate to https://github.com/chanzuckerberg/sentry/releases in order to create a new release from $(TAG) using the wheel
+	stored in dist/"
+	git push origin $(TAG) 
+	
 
 
 .PHONY: develop develop-only test build test reset-db clean setup-git update-submodules node-version-check install-system-pkgs install-yarn-pkgs install-sentry-dev build-js-po locale update-transifex build-platform-assets test-cli test-js test-styleguide test-python test-snuba test-acceptance lint lint-python lint-js publish

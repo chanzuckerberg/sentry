@@ -1,3 +1,35 @@
+CZI's Forked Sentry
+------------------
+
+Why fork Sentry?
+~~~~~~~~~~~~~~~
+Well, we run Sentry on our own so it conforms to our PII rules. However,
+we also want some features from Sentry's upstream repo that help out our
+teams. So, we created this fork! Here we maintain our own releases
+of Sentry that will incorporate the cherry picked features we want from
+the main branch.
+
+Building a Release:
+~~~~~~~~~~~~~~~~~~
+We've altered the Makefile a little bit so that it can build a python
+wheel for us that we can release in Github.
+
+* Setup:
+    * [Install yarn](https://classic.yarnpkg.com/en/docs/install/#mac-stable)
+    * [Install nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+    * `nvm install <node_version>` or just `nvm install` to get the latest version of node
+* Build:
+    * `make publish`
+
+* Release:
+    * Executing `make publish` will create a git tag from the latest commit and push it.
+    * For now, navigate to the Github UI to create a relase from the latest tag and upload
+    the python wheel. You can follow instructions 
+    [here](https://help.github.com/en/github/administering-a-repository/managing-releases-in-a-repository)
+    
+
+---
+
 What's Sentry?
 --------------
 
