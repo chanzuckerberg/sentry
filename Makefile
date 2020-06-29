@@ -181,11 +181,14 @@ lint-js:
 
 publish:
 	$(eval TAG := $(SENTRY_VERSION)-sha-$(shell git rev-parse --short HEAD))
+	@echo $(TAG) > VERSION
+	git add VERSION
+	git commit -m "[feature] Updating VERSION file"
+	git push origin HEAD
 	python setup.py sdist bdist_wheel
 	git tag $(TAG)
-	@echo "Navigate to https://github.com/chanzuckerberg/sentry/releases in order to create a new release from $(TAG) using the wheel
-	stored in dist/"
-	git push origin $(TAG) 
+	@echo "Navigate to https://github.com/chanzuckerberg/sentry/releases in order to create a new release from $(TAG) using the wheel stored in dist/"
+	git push origin $(TAG)
 	
 
 
