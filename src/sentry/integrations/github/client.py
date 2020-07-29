@@ -124,7 +124,7 @@ class GitHubClientMixin(ApiClient):
 
     def create_token(self):
         return self.post(
-            u'/installations/{}/access_tokens'.format(
+            u'/app/installations/{}/access_tokens'.format(
                 self.integration.external_id,
             ),
             headers={

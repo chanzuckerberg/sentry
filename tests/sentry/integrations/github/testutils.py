@@ -577,7 +577,7 @@ INSTALLATION_EVENT_EXAMPLE = """{
       "type": "User",
       "site_admin": false
     },
-    "access_tokens_url": "https://api.github.com/installations/2/access_tokens",
+    "access_tokens_url": "https://api.github.com/app/installations/2/access_tokens",
     "repositories_url": "https://api.github.com/installation/repositories"
   },
   "sender": {
@@ -624,7 +624,7 @@ INSTALLATION_REPO_EVENT = """{
       "type": "User",
       "site_admin": false
     },
-    "access_tokens_url": "https://api.github.com/installations/2/access_tokens",
+    "access_tokens_url": "https://api.github.com/app/installations/2/access_tokens",
     "repositories_url": "https://api.github.com/installation/repositories",
     "html_url": "https://github.com/settings/installations/2"
   },
@@ -780,7 +780,7 @@ LIST_INSTALLATION_API_RESPONSE = """{
         "avatar_url": "https://github.com/images/error/octocat_happy.gif",
         "description": "A great organization"
       },
-      "access_tokens_url": "https://api.github.com/installations/1/access_tokens",
+      "access_tokens_url": "https://api.github.com/app/installations/1/access_tokens",
       "repositories_url": "https://api.github.com/installation/repositories",
       "html_url": "https://github.com/organizations/github/settings/installations/1",
       "app_id": 1,
@@ -819,7 +819,7 @@ LIST_INSTALLATION_API_RESPONSE = """{
         "type": "User",
         "site_admin": false
       },
-      "access_tokens_url": "https://api.github.com/installations/1/access_tokens",
+      "access_tokens_url": "https://api.github.com/app/installations/1/access_tokens",
       "repositories_url": "https://api.github.com/installation/repositories",
       "html_url": "https://github.com/organizations/github/settings/installations/1",
       "app_id": 1,

@@ -58,7 +58,7 @@ class GitHubIntegrationTest(IntegrationTestCase):
 
         responses.add(
             responses.POST,
-            u'https://api.github.com/installations/{}/access_tokens'.format(
+            u'https://api.github.com/app/installations/{}/access_tokens'.format(
                 self.installation_id,
             ),
             json={

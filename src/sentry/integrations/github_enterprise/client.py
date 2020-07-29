@@ -20,7 +20,7 @@ class GitHubEnterpriseAppsClient(GitHubClientMixin):
 
     def create_token(self):
         return self.post(
-            u'/installations/{}/access_tokens'.format(
+            u'/app/installations/{}/access_tokens'.format(
                 self.integration.metadata['installation_id'],
             ),
             headers={
