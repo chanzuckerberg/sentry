@@ -259,7 +259,7 @@ const StreamActions = createReactClass({
           orgId: this.props.orgId,
           itemIds,
           query: this.props.query,
-          project: selection.projects,
+          projectId: this.props.projectId,
           environment: selection.environments,
           ...selection.datetime,
         },
