@@ -19,9 +19,11 @@ line = _ (comment / rule / empty) newline?
 
 rule = _ matcher owners
 
-matcher      = _ matcher_tag identifier
+matcher      = _ matcher_tag any_identifier
 matcher_tag  = (matcher_type sep)?
-matcher_type = "url" / "path"
+matcher_type = "url" / "path" / event_tag
+
+event_tag   = ~r"tags.[^:]+"
 
 owners       = _ owner+
 owner        = _ team_prefix identifier
@@ -30,7 +32,9 @@ team_prefix  = "#"?
 comment = ~r"#[^\r\n]*"
 
 # TODO: make more specific
+any_identifier = quoted_identifier / identifier
 identifier = ~r"\S+"
+quoted_identifier = ~r'"([^"\\]*(?:\\.[^"\\]*)*)"'
 
 sep     = ":"
 space   = " "
@@ -93,7 +97,13 @@ class Matcher(namedtuple('Matcher', 'type pattern')):
         )
 
     def test(self, data):
-        return getattr(self, 'test_%s' % self.type)(data)
+        if self.type == "url":
+            return self.test_url(data)
+        elif self.type == "path":
+            return self.test_path(data)
+        elif self.type.startswith("tags."):
+            return self.test_tag(data)
+        return False
 
     def test_url(self, data):
         try:
@@ -116,6 +126,13 @@ class Matcher(namedtuple('Matcher', 'type pattern')):
             if fnmatch(filename, self.pattern):
                 return True
 
+        return False
+
+    def test_tag(self, data):
+        tag = self.type[5:]
+        for k, v in data.get("tags"):
+            if k == tag and glob_match(v, self.pattern):
+                return True
         return False
 
 
@@ -187,8 +204,14 @@ class OwnershipVisitor(NodeVisitor):
     def visit_team_prefix(self, node, children):
         return bool(children)
 
+    def visit_any_identifier(self, node, children):
+        return children[0]
+
     def visit_identifier(self, node, children):
         return node.text
+
+    def visit_quoted_identifier(self, node, children):
+        return node.text[1:-1].encode("ascii", "backslashreplace").decode("unicode-escape")
 
     def generic_visit(self, node, children):
         return children or node
