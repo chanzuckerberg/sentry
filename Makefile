@@ -180,7 +180,7 @@ lint-js:
 	@echo ""
 
 publish:
-	$(eval TAG := $(SENTRY_VERSION).$(shell cat VERSION))
+	$(eval TAG := $(shell cat VERSION))
 	python setup.py sdist bdist_wheel
 	git tag $(TAG)
 	@echo "Navigate to https://github.com/chanzuckerberg/sentry/releases in order to create a new release from $(TAG) using the wheel stored in dist/"
