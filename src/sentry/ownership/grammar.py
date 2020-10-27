@@ -131,7 +131,7 @@ class Matcher(namedtuple('Matcher', 'type pattern')):
     def test_tag(self, data):
         tag = self.type[5:]
         for k, v in data.get("tags"):
-            if k == tag and glob_match(v, self.pattern):
+            if k == tag and fnmatch(v, self.pattern):
                 return True
         return False
 
