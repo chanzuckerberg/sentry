@@ -19,6 +19,7 @@ wheel for us that we can release in Github.
     * [Install nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
     * `nvm install <node_version>` or just `nvm install` to get the latest version of node
 * Build:
+    * Bump the number in the VERSION file and push that change up to main.
     * `make publish`
 
 * Release:
