@@ -187,7 +187,7 @@ class SlackNotifyServiceAction(EventAction):
         channels_list_initial = True
         while cursor or channels_list_initial:
             channels_list_initial = False
-            channels = session.get("https://slack.com/api/channels.list", params=dict(channels_payload, **{
+            channels = session.get("https://slack.com/api/conversations.list", params=dict(channels_payload, **{
                 "cursor": cursor
             }))
             channels = channels.json()
